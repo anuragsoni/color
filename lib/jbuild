@@ -3,4 +3,5 @@
 (library
   ((name color)
    (public_name color)
+   (preprocess (pps (ppx_fields_conv)))
    ))

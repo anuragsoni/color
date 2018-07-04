@@ -4,7 +4,9 @@ lib: [
   "_build/install/default/lib/color/color.cmi" {"color.cmi"}
   "_build/install/default/lib/color/color.cmx" {"color.cmx"}
   "_build/install/default/lib/color/color.cmt" {"color.cmt"}
-  "_build/install/default/lib/color/color.ml-gen" {"color.ml-gen"}
+  "_build/install/default/lib/color/color.cmti" {"color.cmti"}
+  "_build/install/default/lib/color/color.mli" {"color.mli"}
+  "_build/install/default/lib/color/color.ml" {"color.ml"}
   "_build/install/default/lib/color/color.cma" {"color.cma"}
   "_build/install/default/lib/color/color.cmxa" {"color.cmxa"}
   "_build/install/default/lib/color/color.a" {"color.a"}
