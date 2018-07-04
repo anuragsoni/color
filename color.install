@@ -1,0 +1,13 @@
+lib: [
+  "_build/install/default/lib/color/META" {"META"}
+  "_build/install/default/lib/color/opam" {"opam"}
+  "_build/install/default/lib/color/color.cmi" {"color.cmi"}
+  "_build/install/default/lib/color/color.cmx" {"color.cmx"}
+  "_build/install/default/lib/color/color.cmt" {"color.cmt"}
+  "_build/install/default/lib/color/color.ml-gen" {"color.ml-gen"}
+  "_build/install/default/lib/color/color.cma" {"color.cma"}
+  "_build/install/default/lib/color/color.cmxa" {"color.cmxa"}
+  "_build/install/default/lib/color/color.a" {"color.a"}
+  "_build/install/default/lib/color/color.cmxs" {"color.cmxs"}
+  "_build/install/default/lib/color/color.dune" {"color.dune"}
+]
