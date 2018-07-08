@@ -97,3 +97,11 @@ let to_rgba color =
   let g = round (255. *. c.g) in
   let b = round (255. *. c.b) in
   {Rgba.r; g; b; a= c.a}
+
+let to_hexstring color =
+  let c = to_rgba color in
+  let to_hex n =
+    let repr = Printf.sprintf "%x" n in
+    if String.length repr = 1 then "0" ^ repr else repr
+  in
+  "#" ^ to_hex c.r ^ to_hex c.g ^ to_hex c.b
