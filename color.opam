@@ -2,8 +2,11 @@ opam-version: "2.0"
 name: "color"
 version: "0.1"
 synopsis: "Library for working with colors. Conversion between RGB and HSL"
-maintainer: "Anurag Soni <anuragsoni.13@gmail.com>"
-authors: "Anurag Soni <anuragsoni.13@gmail.com>"
+maintainer: "anuragsoni.13@gmail.com"
+authors: ["Anurag Soni"]
+homepage: "https://github.com/anuragsoni/color"
+dev-repo: "git+https://github.com/anuragsoni/color.git"
+bug-reports: "https://github.com/anuragsoni/color/issues"
 license: "MIT"
 build: [
   ["jbuilder" "subst"] {pinned}
