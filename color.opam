@@ -7,12 +7,13 @@ authors: ["Anurag Soni"]
 homepage: "https://github.com/anuragsoni/color"
 dev-repo: "git+https://github.com/anuragsoni/color.git"
 bug-reports: "https://github.com/anuragsoni/color/issues"
+doc: "https://anuragsoni.github.io/color/"
 license: "MIT"
+
 build: [
   ["jbuilder" "subst"] {pinned}
   ["jbuilder" "build" "-p" name "-j" jobs]
 ]
-build-test: ["jbuilder" "runtest" "-p" name]
 
 depends: [
   "jbuilder" {build & >= "1.0+beta14"}
