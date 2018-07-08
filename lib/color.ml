@@ -77,16 +77,19 @@ let of_hsl h s l = of_hsla h s l 1.
 let to_hsla (HSLA (h, s, l, a)) = {Hsla.h= clip_hue h; s; l; a}
 
 let to_rgba' (HSLA (h, s, l, a)) =
-  let h' = clip_hue h /. 60. in
+  let norm_hue = clip_hue h /. 60. in
   let chr = (1. -. abs_float ((2. *. l) -. 1.)) *. s in
   let m = l -. (chr /. 2.) in
-  let x = chr *. (1. -. abs_float (mod_float h' 2. -. 1.)) in
-  if h' < 1. then {Rgba'.r= chr +. m; g= x +. m; b= m; a}
-  else if 1. <= h' && h' < 2. then {r= x +. m; g= chr +. m; b= m; a}
-  else if 2. <= h' && h' < 3. then {r= m; g= chr +. m; b= x +. m; a}
-  else if 3. <= h' && h' < 4. then {r= m; g= x +. m; b= chr +. m; a}
-  else if 4. <= h' && h' < 5. then {r= x +. m; g= m; b= chr +. m; a}
-  else {r= chr +. m; g= m; b= x +. m; a}
+  let x = chr *. (1. -. abs_float (mod_float norm_hue 2. -. 1.)) in
+  let make r g b = {Rgba'.r= r +. m; g= g +. m; b= b +. m; a} in
+  if norm_hue < 0. then make 0. 0. 0.
+  else if norm_hue < 1. then make chr x 0.
+  else if norm_hue < 2. then make x chr 0.
+  else if norm_hue < 3. then make 0. chr x
+  else if norm_hue < 4. then make 0. x chr
+  else if norm_hue < 5. then make x 0. chr
+  else if norm_hue < 6. then make chr 0. x
+  else make 0. 0. 0.
 
 let to_rgba color =
   let c = to_rgba' color in
