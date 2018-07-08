@@ -1,6 +1,10 @@
-# Color
+## color: converts between different color formats
 
-Library to convert between different color formats.
+Library that converts between different color formats. Right now it deals with
+HSL, HSLA, RGB and RGBA formats.
+
+The goal for this library is to provide easy handling of colors on the web, when working
+with `js_of_ocaml`.
 
 ## Examples
 
