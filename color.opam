@@ -9,12 +9,12 @@ doc: "https://anuragsoni.github.io/color/"
 license: "MIT"
 
 build: [
-  ["dune" "subst" "-p" name] {pinned}
-  ["dune" "build" "-p" name "-j" jobs]
+  ["jbuilder" "subst" "-p" name] {pinned}
+  ["jbuilder" "build" "-p" name "-j" jobs]
 ]
 
 depends: [
-  "dune" {build & >= "1.0"}
+  "jbuilder" {build & >= "1.0+beta14"}
   "alcotest" {test}
 ]
 
