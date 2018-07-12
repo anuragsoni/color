@@ -3,22 +3,22 @@
 default: build-dev
 
 build-dev:
-	jbuilder build --dev
+	dune build
 
 build:
-	jbuilder build
+	dune build
 
 test:
-	jbuilder runtest -f
+	dune runtest -f
 
 install:
-	jbuilder install
+	dune install
 
 uninstall:
-	jbuilder uninstall
+	dune uninstall
 
 clean:
-	jbuilder clean
+	dune clean
 
 utop:
-	jbuilder utop lib
+	dune utop lib
