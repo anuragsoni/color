@@ -123,6 +123,21 @@ let to_hexstring color =
   in
   "#" ^ to_hex c.r ^ to_hex c.g ^ to_hex c.b
 
+let to_css_hsla (HSLA (UnclippedHue h, s, l, a)) =
+  if a = 1. then
+    Printf.sprintf "hsl(%.2f, %.2f%s, %.2f%s)" h (s *. 100.) "%" (l *. 100.)
+      "%"
+  else
+    Printf.sprintf "hsla(%.2f, %.2f%s, %.2f%s, %.2f)" h (s *. 100.) "%"
+      (l *. 100.) "%" a
+
+let to_css_rgba color =
+  let color' = to_rgba color in
+  if color'.a = 1. then
+    Printf.sprintf "rgb(%d, %d, %d)" color'.r color'.g color'.b
+  else
+    Printf.sprintf "rgba(%d, %d, %d, %.2f)" color'.r color'.g color'.b color'.a
+
 let black = of_hsl 0. 0. 0.
 
 let white = of_hsl 0. 0. 1.

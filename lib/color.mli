@@ -60,6 +60,12 @@ val to_hexstring : t -> string
 (** Converts a color to its hexadecimal representation. The alpha channel
     is not represented. *)
 
+(** CSS representation of the color in [hsl(..)] or [hsla(..)] form. *)
+val to_css_hsla : t -> string
+
+(** CSS representation of the color in [rgb(..)] or [rgba(..)] form. *)
+val to_css_rgba : t -> string
+
 val black : t
 (** Pure black *)
 
