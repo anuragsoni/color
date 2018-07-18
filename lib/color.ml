@@ -74,6 +74,23 @@ let of_hsla h s l a =
 
 let of_hsl h s l = of_hsla h s l 1.
 
+let of_hexstring s =
+  if String.length s = 4 || String.length s = 7 then
+    let short = String.length s = 4 in
+    let r' = if short then String.sub s 1 1 else String.sub s 1 2 in
+    let g' = if short then String.sub s 2 1 else String.sub s 3 2 in
+    let b' = if short then String.sub s 3 1 else String.sub s 5 2 in
+    let r = int_of_string_opt ("0x" ^ r') in
+    let g = int_of_string_opt ("0x" ^ g') in
+    let b = int_of_string_opt ("0x" ^ b') in
+    match (r, g, b) with
+    | Some r, Some g, Some b ->
+        if short then
+          Some (of_rgb ((16 * r) + r) ((16 * g) + g) ((16 * b) + b))
+        else Some (of_rgb r g b)
+    | _ -> None
+  else None
+
 let to_hsla (HSLA (h, s, l, a)) = {Hsla.h= clip_hue h; s; l; a}
 
 let to_rgba' (HSLA (h, s, l, a)) =

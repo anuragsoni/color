@@ -39,6 +39,11 @@ val of_hsl : float -> float -> float -> t
     degrees, a float value between 0.0 and 360.0. Saturation and Lightness are float
     values between 0.0 and 1.0 *)
 
+val of_hexstring : string -> t option
+(** Parse a hexadecimal color code. Handles short format like [#rgb] or
+    long format [#rrggbb]. Short format [#abc] corresponds to long format
+    [#aabbcc]. *)
+
 val to_hsla : t -> Hsla.t
 (** Converts a [color] to its Hue, Saturation, Lightness and Alpha values. *)
 
