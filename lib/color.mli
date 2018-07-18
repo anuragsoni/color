@@ -54,3 +54,30 @@ val to_rgba : t -> Rgba.t
 val to_hexstring : t -> string
 (** Converts a color to its hexadecimal representation. The alpha channel
     is not represented. *)
+
+val black : t
+(** Pure black *)
+
+val white : t
+(** Pure white *)
+
+val gray_tone : float -> t
+(** Creates a gray tone from light values (0.0 -> black, 1.0 -> white) *)
+
+val rotate_hue : float -> t -> t
+(** Rotates the hue of a Color by some angle (in degrees) *)
+
+val complementary : t -> t
+(** Gets complementary color by rotating hue by 180° *)
+
+val lighten : float -> t -> t
+(** Lightens a color by adding an amount to the lightness channel *)
+
+val darken : float -> t -> t
+(** Darkens a color by subtracing an amount to the lightness channel *)
+
+val saturate : float -> t -> t
+(** Increases the saturation of a color *)
+
+val desaturate : float -> t -> t
+(** Decreases the saturation of a color *)

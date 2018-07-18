@@ -105,3 +105,22 @@ let to_hexstring color =
     if String.length repr = 1 then "0" ^ repr else repr
   in
   "#" ^ to_hex c.r ^ to_hex c.g ^ to_hex c.b
+
+let black = of_hsl 0. 0. 0.
+
+let white = of_hsl 0. 0. 1.
+
+let gray_tone l = of_hsl 0. 0. l
+
+let rotate_hue angle (HSLA (UnclippedHue h, s, l, a)) =
+  of_hsla (h +. angle) s l a
+
+let complementary = rotate_hue 180.
+
+let lighten f (HSLA (UnclippedHue h, s, l, a)) = of_hsla h s (l +. f) a
+
+let darken f = lighten (0. -. f)
+
+let saturate f (HSLA (UnclippedHue h, s, l, a)) = of_hsla h (s +. f) l a
+
+let desaturate f = saturate (0. -. f)
