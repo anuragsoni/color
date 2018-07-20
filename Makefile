@@ -1,24 +1,24 @@
-.PHONY: default build-dev build install uninstall test clean utop
+.PHONY: default build-prod build install uninstall test clean utop
 
-default: build-dev
-
-build-dev:
-	jbuilder build --dev
+default: build
 
 build:
-	jbuilder build
+	dune build
+
+build-prod:
+	dune build --profile release
 
 test:
-	jbuilder runtest -f
+	dune runtest -f
 
 install:
-	jbuilder install
+	dune install
 
 uninstall:
-	jbuilder uninstall
+	dune uninstall
 
 clean:
-	jbuilder clean
+	dune clean
 
 utop:
-	jbuilder utop lib
+	dune utop lib
