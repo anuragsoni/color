@@ -1,7 +1,7 @@
 (** This module deals with colors. *)
 
 (** Representation of a color. *)
-type t
+type t = Gg.color
 
 module Hsla : sig
   type t = {h: float; s: float; l: float; a: float}
