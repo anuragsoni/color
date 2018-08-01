@@ -1,4 +1,4 @@
-let round x = int_of_float @@ (Gg.Float.round x)
+let round x = int_of_float @@ Gg.Float.round x
 
 let positive_float x y = mod_float (mod_float x y +. y) y
 
