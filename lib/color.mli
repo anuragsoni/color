@@ -60,11 +60,11 @@ val to_hexstring : t -> string
 (** Converts a color to its hexadecimal representation. The alpha channel
     is not represented. *)
 
-(** CSS representation of the color in [hsl(..)] or [hsla(..)] form. *)
 val to_css_hsla : t -> string
+(** CSS representation of the color in [hsl(..)] or [hsla(..)] form. *)
 
-(** CSS representation of the color in [rgb(..)] or [rgba(..)] form. *)
 val to_css_rgba : t -> string
+(** CSS representation of the color in [rgb(..)] or [rgba(..)] form. *)
 
 val black : t
 (** Pure black *)
@@ -92,3 +92,29 @@ val saturate : float -> t -> t
 
 val desaturate : float -> t -> t
 (** Decreases the saturation of a color *)
+
+val brightness : t -> float
+(** The perceived brightness of a color.
+    https://www.w3.org/TR/AERT/#color-contrast *)
+
+val relative_luminance : t -> float
+(** The relative brightness of any color, normalized to
+    0. for darkest black and 1. for lightest white.
+    https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef *)
+
+val contrast_ratio : t -> t -> float
+(** Contrast ratio between two colors. It is a value that
+    can range from 1. to 21. https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef *)
+
+val light : t -> bool
+(** Checks whether a color is perceived as a light color. *)
+
+val readable : t -> t -> bool
+(** Checks if text of one color is readable on a background
+    of the second color. A minimum contrast ratio of 4.5 is
+    recommended to ensure that text is readable on a given
+    background. https://www.w3.org/TR/WCAG20-TECHS/G18.html *)
+
+val text_color : t -> t
+(** Returns a readable foreground text color
+    (picks between black or white) for a given background color *)

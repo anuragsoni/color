@@ -30,7 +30,9 @@ let of_hsla h s l a =
   let chr = (1. -. abs_float ((2. *. l) -. 1.)) *. s in
   let m = l -. (chr /. 2.) in
   let x = chr *. (1. -. abs_float (mod_float norm_hue 2. -. 1.)) in
-  let make r g b = Gg.Color.v_srgb ~a (r +. m) (g +. m) (b +. m) |> Gg.Color.clamp in
+  let make r g b =
+    Gg.Color.v_srgb ~a (r +. m) (g +. m) (b +. m) |> Gg.Color.clamp
+  in
   if norm_hue < 0. then make 0. 0. 0.
   else if norm_hue < 1. then make chr x 0.
   else if norm_hue < 2. then make x chr 0.
@@ -143,3 +145,28 @@ let saturate f t =
   of_hsla h (s +. f) l a
 
 let desaturate f = saturate (0. -. f)
+
+let brightness t =
+  let {Rgba'.r; g; b; _} = to_rgba' t in
+  ((299. *. r) +. (587. *. g) +. (114. *. b)) /. 1000.
+
+let relative_luminance t =
+  let {Rgba'.r; g; b; _} = to_rgba' t in
+  let convert c =
+    if c <= 0.03928 then c /. 12.92 else ((c +. 0.055) /. 1.055) ** 2.4
+  in
+  let r' = convert r in
+  let g' = convert g in
+  let b' = convert b in
+  (0.2126 *. r') +. (0.7152 *. g') +. (0.0722 *. b')
+
+let contrast_ratio t1 t2 =
+  let l1 = relative_luminance t1 in
+  let l2 = relative_luminance t2 in
+  if l1 > l2 then (l1 +. 0.05) /. (l2 +. 0.05) else (l2 +. 0.05) /. (l1 +. 0.05)
+
+let light t = brightness t > 0.5
+
+let readable t1 t2 = contrast_ratio t1 t2 > 4.5
+
+let text_color t = if light t then black else white
