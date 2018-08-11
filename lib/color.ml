@@ -16,11 +16,11 @@ module Rgba = struct
   type t = {r: int; g: int; b: int; a: float}
 end
 
-let of_rgba r g b a = Gg.Color.v_srgbi ~a r g b
+let of_rgba r g b a = Gg.Color.v_srgbi ~a r g b |> Gg.Color.clamp
 
 let of_rgb red green blue = of_rgba red green blue 1.
 
-let of_rgba' r g b a = Gg.Color.v_srgb ~a r g b
+let of_rgba' r g b a = Gg.Color.v_srgb ~a r g b |> Gg.Color.clamp
 
 let of_rgb' r g b = of_rgba' r g b 1.
 
@@ -30,7 +30,7 @@ let of_hsla h s l a =
   let chr = (1. -. abs_float ((2. *. l) -. 1.)) *. s in
   let m = l -. (chr /. 2.) in
   let x = chr *. (1. -. abs_float (mod_float norm_hue 2. -. 1.)) in
-  let make r g b = Gg.Color.v_srgb ~a (r +. m) (g +. m) (b +. m) in
+  let make r g b = Gg.Color.v_srgb ~a (r +. m) (g +. m) (b +. m) |> Gg.Color.clamp in
   if norm_hue < 0. then make 0. 0. 0.
   else if norm_hue < 1. then make chr x 0.
   else if norm_hue < 2. then make x chr 0.
