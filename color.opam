@@ -9,7 +9,7 @@ doc: "https://anuragsoni.github.io/color/"
 license: "MIT"
 
 build: [
-  "dune" "build"
+  "dune" "build" "-p" name "-j" jobs
 ]
 
 depends: [
