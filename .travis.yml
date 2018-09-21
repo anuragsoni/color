@@ -8,4 +8,6 @@ env:
   - PINS="color:."
   - DISTRO="debian-stable"
   matrix:
+  - PACKAGE="color" OCAML_VERSION="4.05"
   - PACKAGE="color" OCAML_VERSION="4.06"
+  - PACKAGE="color" OCAML_VERSION="4.07"
