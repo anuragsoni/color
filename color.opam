@@ -9,15 +9,14 @@ doc: "https://anuragsoni.github.io/color/"
 license: "MIT"
 
 build: [
-  "dune" "build" "-p" name "-j" jobs
+  ["dune" "subst"] {pinned}
+  ["dune" "build" "-p" name "-j" jobs]
+  ["dune" "runtest" "-p" name "-j" jobs] {with-test}
 ]
 
 depends: [
+  "ocaml"
   "dune" {build}
-  "alcotest" {test}
+  "alcotest" {with-test}
   "gg"
-]
-
-available: [
-  ocaml-version >= "4.06.0"
 ]
