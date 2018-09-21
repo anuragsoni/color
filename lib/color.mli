@@ -95,16 +95,16 @@ val desaturate : float -> t -> t
 
 val brightness : t -> float
 (** The perceived brightness of a color.
-    https://www.w3.org/TR/AERT/#color-contrast *)
+    {{:https://www.w3.org/TR/AERT/#color-contrast} https://www.w3.org/TR/AERT/#color-contrast} *)
 
 val relative_luminance : t -> float
 (** The relative brightness of any color, normalized to
     0. for darkest black and 1. for lightest white.
-    https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef *)
+    {{: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef} https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef} *)
 
 val contrast_ratio : t -> t -> float
 (** Contrast ratio between two colors. It is a value that
-    can range from 1. to 21. https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef *)
+    can range from 1. to 21. {{: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef} https://www.w3.org/TR/2008/REC-WCAG20-20081211/#con<Paste>} *)
 
 val light : t -> bool
 (** Checks whether a color is perceived as a light color. *)
@@ -113,7 +113,7 @@ val readable : t -> t -> bool
 (** Checks if text of one color is readable on a background
     of the second color. A minimum contrast ratio of 4.5 is
     recommended to ensure that text is readable on a given
-    background. https://www.w3.org/TR/WCAG20-TECHS/G18.html *)
+    background. {{: https://www.w3.org/TR/WCAG20-TECHS/G18.html} https://www.w3.org/TR/WCAG20-TECHS/G18.html} *)
 
 val text_color : t -> t
 (** Returns a readable foreground text color
