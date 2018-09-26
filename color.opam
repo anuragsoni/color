@@ -5,7 +5,7 @@ authors: ["Anurag Soni"]
 homepage: "https://github.com/anuragsoni/color"
 dev-repo: "git+https://github.com/anuragsoni/color.git"
 bug-reports: "https://github.com/anuragsoni/color/issues"
-doc: "https://anuragsoni.github.io/color/"
+doc: "https://anuragsoni.github.io/color/doc"
 license: "MIT"
 
 build: [
