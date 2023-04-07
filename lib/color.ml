@@ -68,7 +68,7 @@ let of_oklab ?(alpha = 1.0) l a b =
   let r = (4.0767416621 *. l') -. (3.3077115913 *. m) +. (0.2309699292 *. s) in
   let g = (-1.2684380046 *. l') +. (2.6097574011 *. m) -. (0.3413193965 *. s) in
   let b = (-0.0041960863 *. l') -. (0.7034186147 *. m) +. (1.7076147010 *. s) in
-  Gg.Color.v_srgb ~a:alpha r g b |> Gg.Color.clamp
+  Gg.Color.v r g b alpha |> Gg.Color.clamp
 
 let of_oklch ?(alpha = 1.0) l c h =
   let h = deg_to_rad h in
@@ -132,18 +132,14 @@ let to_hsla t =
 
 let to_oklab t : Oklab.t =
   (* From https://bottosson.github.io/posts/oklab/#converting-from-linear-srgb-to-oklab *)
-  let open Gg.Color in
-  let t = to_srgb t in
+  let r, g, b, alpha =
+    let open Gg.Color in
+    (r t, g t, b t, a t)
+  in
 
-  let l =
-    (0.4122214708 *. r t) +. (0.5363325363 *. g t) +. (0.0514459929 *. b t)
-  in
-  let m =
-    (0.2119034982 *. r t) +. (0.6806995451 *. g t) +. (0.1073969566 *. b t)
-  in
-  let s =
-    (0.0883024619 *. r t) +. (0.2817188376 *. g t) +. (0.6299787005 *. b t)
-  in
+  let l = (0.4122214708 *. r) +. (0.5363325363 *. g) +. (0.0514459929 *. b) in
+  let m = (0.2119034982 *. r) +. (0.6806995451 *. g) +. (0.1073969566 *. b) in
+  let s = (0.0883024619 *. r) +. (0.2817188376 *. g) +. (0.6299787005 *. b) in
 
   let l = Float.cbrt l in
   let m = Float.cbrt m in
@@ -153,7 +149,7 @@ let to_oklab t : Oklab.t =
     l = (0.2104542553 *. l) +. (0.7936177850 *. m) -. (0.0040720468 *. s);
     a = (1.9779984951 *. l) -. (2.4285922050 *. m) +. (0.4505937099 *. s);
     b = (0.0259040371 *. l) +. (0.7827717662 *. m) -. (0.8086757660 *. s);
-    alpha = a t;
+    alpha;
   }
 
 let to_oklch t : Oklch.t =
@@ -191,13 +187,13 @@ let to_css_rgba color =
 
 let to_css_oklab t =
   let ok = to_oklab t in
-  let pp_alpha () = function 1.0 -> "" | f -> Printf.sprintf " / %f" f in
-  Printf.sprintf "oklab(%f %f %f%a)" ok.l ok.a ok.b pp_alpha ok.alpha
+  let pp_alpha () = function 1.0 -> "" | f -> Printf.sprintf " / %.2f" f in
+  Printf.sprintf "oklab(%.2f %.2f %.2f%a)" ok.l ok.a ok.b pp_alpha ok.alpha
 
 let to_css_oklch t =
   let ok = to_oklch t in
-  let pp_alpha () = function 1.0 -> "" | f -> Printf.sprintf " / %f" f in
-  Printf.sprintf "oklch(%f %f %fdeg%a)" ok.l ok.c ok.h pp_alpha ok.alpha
+  let pp_alpha () = function 1.0 -> "" | f -> Printf.sprintf " / %.2f" f in
+  Printf.sprintf "oklch(%.2f %.2f %.2fdeg%a)" ok.l ok.c ok.h pp_alpha ok.alpha
 
 let black = Gg.Color.black
 
