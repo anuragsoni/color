@@ -1,7 +1,7 @@
 opam-version: "2.0"
 name: "color"
 maintainer: "anuragsoni.13@gmail.com"
-authors: ["Anurag Soni"]
+authors: ["Anurag Soni" "Ambre Austen Suhamy"]
 homepage: "https://github.com/anuragsoni/color"
 dev-repo: "git+https://github.com/anuragsoni/color.git"
 bug-reports: "https://github.com/anuragsoni/color/issues"
