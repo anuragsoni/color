@@ -15,6 +15,14 @@ module Rgba : sig
   type t = {r: int; g: int; b: int; a: float}
 end
 
+module Oklab : sig
+  type t = { l : float; a : float; b : float; alpha : float }
+end
+
+module Oklch : sig
+  type t = { l : float; c : float; h : float; alpha : float }
+end
+
 val of_rgba : int -> int -> int -> float -> t
 (** Creates a [color] from integer RGB values between 0 and 255
     and a floating point alpha value between 0.0 and 1.0.
@@ -39,6 +47,19 @@ val of_hsl : float -> float -> float -> t
     degrees, a float value between 0.0 and 360.0. Saturation and Lightness are float
     values between 0.0 and 1.0 *)
 
+val of_oklab : ?alpha:float -> float -> float -> float -> t
+(** Creates a [color] from LAB (and optional alpha).
+    l is lightness, between 0.0 and 1.0
+    a and b are floats values (theoretically unbounded but in practice do not exceed ~±0.5)
+    alpha is transparency, between 0.0 and 1.0 *)
+
+val of_oklch : ?alpha:float -> float -> float -> float -> t
+(** Creates a [color] from LCH (and optional alpha).
+    l is lightness, between 0.0 and 1.0
+    c is chroma, minimum is 0.0 and practical maximum value is ~0.5
+    h is hue in degrees, a float value between 0.0 and 360.0
+    alpha is transparency, between 0.0 and 1.0 *)
+
 val of_hexstring : string -> t option
 (** Parse a hexadecimal color code. Handles short format like [#rgb] or
     long format [#rrggbb]. Short format [#abc] corresponds to long format
@@ -56,6 +77,19 @@ val to_rgba : t -> Rgba.t
     integers in the range of 0 to 255. The alpha channel is a float between
     0.0 and 1.0 *)
 
+val to_oklab : t -> Oklab.t
+(** Converts a [color] to its Oklab value.
+    l is lightness, between 0.0 and 1.0
+    a and b are floats values (theoretically unbounded but in practice do not exceed ~±0.5)
+    alpha is transparency, between 0.0 and 1.0 *)
+
+val to_oklch : t -> Oklch.t
+(** Converts a [color] to its Oklch value.
+    l is lightness, between 0.0 and 1.0
+    c is chroma, minimum is 0.0 and practical maximum value is ~0.5
+    h is hue in degrees, a float value between 0.0 and 360.0
+    alpha is transparency, between 0.0 and 1.0 *)
+
 val to_hexstring : t -> string
 (** Converts a color to its hexadecimal representation. The alpha channel
     is not represented. *)
@@ -65,6 +99,12 @@ val to_css_hsla : t -> string
 
 val to_css_rgba : t -> string
 (** CSS representation of the color in [rgb(..)] or [rgba(..)] form. *)
+
+val to_css_oklab : t -> string
+(** CSS representation of the color in [oklab(..)] form. *)
+
+val to_css_oklch : t -> string
+(** CSS representation of the color in [oklch(..)] form. *)
 
 val black : t
 (** Pure black *)

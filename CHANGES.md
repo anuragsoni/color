@@ -1,3 +1,7 @@
+# Unreleased
+
+- Added support for OkLab & Oklch color models
+
 # 0.2.0
 
 * Switch to using types from [Gg](http://erratique.ch/software/gg)

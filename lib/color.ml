@@ -2,6 +2,9 @@ let round x = int_of_float @@ Gg.Float.round x
 
 let positive_float x y = mod_float (mod_float x y +. y) y
 
+let deg_to_rad d = d *. Float.pi /. 180.
+let rad_to_deg r = r *. 180. /. Float.pi
+
 type t = Gg.color
 
 module Hsla = struct
@@ -14,6 +17,14 @@ end
 
 module Rgba = struct
   type t = {r: int; g: int; b: int; a: float}
+end
+
+module Oklab = struct
+  type t = { l : float; a : float; b : float; alpha : float }
+end
+
+module Oklch = struct
+  type t = { l : float; c : float; h : float; alpha : float }
 end
 
 let of_rgba r g b a = Gg.Color.v_srgbi ~a r g b |> Gg.Color.clamp
@@ -43,6 +54,27 @@ let of_hsla h s l a =
   else make 0. 0. 0.
 
 let of_hsl h s l = of_hsla h s l 1.
+
+let of_oklab ?(alpha = 1.0) l a b =
+  (* From https://bottosson.github.io/posts/oklab/#converting-from-linear-srgb-to-oklab *)
+  let l' = l +. (0.3963377774 *. a) +. (0.2158037573 *. b) in
+  let m = l -. (0.1055613458 *. a) -. (0.0638541728 *. b) in
+  let s = l -. (0.0894841775 *. a) -. (1.2914855480 *. b) in
+
+  let l' = l' *. l' *. l' in
+  let m = m *. m *. m in
+  let s = s *. s *. s in
+
+  let r = (4.0767416621 *. l') -. (3.3077115913 *. m) +. (0.2309699292 *. s) in
+  let g = (-1.2684380046 *. l') +. (2.6097574011 *. m) -. (0.3413193965 *. s) in
+  let b = (-0.0041960863 *. l') -. (0.7034186147 *. m) +. (1.7076147010 *. s) in
+  Gg.Color.v r g b alpha |> Gg.Color.clamp
+
+let of_oklch ?(alpha = 1.0) l c h =
+  let h = deg_to_rad h in
+  let a = c *. cos h in
+  let b = c *. sin h in
+  of_oklab ~alpha l a b
 
 let of_hexstring s =
   if String.length s = 4 || String.length s = 7 then
@@ -98,6 +130,37 @@ let to_hsla t =
   in
   {Hsla.h= hue; s= saturation; l= lightness; a= alpha}
 
+let to_oklab t : Oklab.t =
+  (* From https://bottosson.github.io/posts/oklab/#converting-from-linear-srgb-to-oklab *)
+  let r, g, b, alpha =
+    let open Gg.Color in
+    (r t, g t, b t, a t)
+  in
+
+  let l = (0.4122214708 *. r) +. (0.5363325363 *. g) +. (0.0514459929 *. b) in
+  let m = (0.2119034982 *. r) +. (0.6806995451 *. g) +. (0.1073969566 *. b) in
+  let s = (0.0883024619 *. r) +. (0.2817188376 *. g) +. (0.6299787005 *. b) in
+
+  let l = Float.cbrt l in
+  let m = Float.cbrt m in
+  let s = Float.cbrt s in
+
+  {
+    l = (0.2104542553 *. l) +. (0.7936177850 *. m) -. (0.0040720468 *. s);
+    a = (1.9779984951 *. l) -. (2.4285922050 *. m) +. (0.4505937099 *. s);
+    b = (0.0259040371 *. l) +. (0.7827717662 *. m) -. (0.8086757660 *. s);
+    alpha;
+  }
+
+let to_oklch t : Oklch.t =
+  let ok = to_oklab t in
+  {
+    l = ok.l;
+    c = sqrt ((ok.a ** 2.0) +. (ok.b ** 2.0));
+    h = rad_to_deg (Float.atan2 ok.b ok.a);
+    alpha = ok.alpha;
+  }
+
 let to_hexstring color =
   let c = to_rgba color in
   let to_hex n =
@@ -121,6 +184,16 @@ let to_css_rgba color =
     Printf.sprintf "rgb(%d, %d, %d)" color'.r color'.g color'.b
   else
     Printf.sprintf "rgba(%d, %d, %d, %.2f)" color'.r color'.g color'.b color'.a
+
+let to_css_oklab t =
+  let ok = to_oklab t in
+  let pp_alpha () = function 1.0 -> "" | f -> Printf.sprintf " / %.2f" f in
+  Printf.sprintf "oklab(%.2f %.2f %.2f%a)" ok.l ok.a ok.b pp_alpha ok.alpha
+
+let to_css_oklch t =
+  let ok = to_oklch t in
+  let pp_alpha () = function 1.0 -> "" | f -> Printf.sprintf " / %.2f" f in
+  Printf.sprintf "oklch(%.2f %.2f %.2fdeg%a)" ok.l ok.c ok.h pp_alpha ok.alpha
 
 let black = Gg.Color.black
 
