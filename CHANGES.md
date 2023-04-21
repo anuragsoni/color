@@ -1,6 +1,15 @@
 # Unreleased
 
 - Added support for OkLab & Oklch color models
+- Massive API change:
+  - `Rgba` renamed to `Rgb`
+  - `Rgba'` renamed to `Rgb_float`
+  - `Hsla` renamed to `Hsl`
+  - All those modules + Ok have the same API (`ColorRep`)
+  - Lightness & contrast checking now use Oklch
+  - `brighness` and `relative_luminance` merged in `lightness` function
+  - `[de]saturate` renamed to `[des]intensify`
+- Added `random` function (random hue, optional alpha lightness and chroma)
 
 # 0.2.0
 
