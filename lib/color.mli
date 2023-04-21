@@ -1,160 +1,103 @@
 (** This module deals with colors. *)
 
-(** Representation of a color. *)
-type t = Gg.color
+type gg = Gg.color
+(** Standard representation of a color. *)
 
-module Hsla : sig
-  type t = {h: float; s: float; l: float; a: float}
+module type ColorRep = sig
+  type t
+  type param
+
+  val v : ?alpha:float -> param -> param -> param -> t
+  val to_gg : t -> gg
+  val from_gg : gg -> t
+  val to_css : t -> string
 end
 
-module Rgba' : sig
-  type t = {r: float; g: float; b: float; a: float}
-end
+module Rgb : ColorRep with type param = int
+(** Classic RedGreenBlue (& optional alpha) representation, closely matching the way screens display colors. 
+    - r, g, and b are integers, between 0 and 255
+    - alpha is the transparency, between 0.0 (full transparency) and 1.0 (full opacity, default) *)
 
-module Rgba : sig
-  type t = {r: int; g: int; b: int; a: float}
-end
+module Rgb_float : ColorRep with type param = float
+(** Same as [Rgb], but with float values.
+    - r, g, and b are floats between 0.0 and 1.0
+    - alpha is the transparency, between 0.0 (full transparency) and 1.0 (full opacity, default) *)
 
-module Oklab : sig
-  type t = { l : float; a : float; b : float; alpha : float }
-end
+module Hsl : ColorRep with type param = float
+(** Hue, Saturation, Lightness. More intuitive to work with than [Rgb].
+    - hue is in degrees, a float value between 0.0 and 360.0
+    - saturation, lightness and alpha are float values between 0.0 and 1.0 *)
 
-module Oklch : sig
-  type t = { l : float; c : float; h : float; alpha : float }
-end
+module Oklab : ColorRep with type param = float
+(** A color space that is ok. See {{: https://bottosson.github.io/posts/oklab/} the author's blog} for more info.
+    - lightness is a float between 0.0 and 1.0
+    - a and b are floats values (theoretically unbounded but in practice do not exceed ~±0.5)
+    - alpha is the transparency, between 0.0 (full transparency) and 1.0 (full opacity, default) *)
 
-val of_rgba : int -> int -> int -> float -> t
-(** Creates a [color] from integer RGB values between 0 and 255
-    and a floating point alpha value between 0.0 and 1.0.
-    Algorithm adapted from: {{: https://en.wikipedia.org/wiki/HSL_and_HSV} https://en.wikipedia.org/wiki/HSL_and_HSV}*)
+module Oklch : ColorRep with type param = float
+(** The polar version of [Oklab]. See {{: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch} mozilla's page on it} for more info.
+    Arguably the easiest space to work with, as it closely match our perception of colors.
+    - lightness is a float between 0.0 and 1.0
+    - c is chroma, minimum is 0.0 and practical maximum value is ~0.5
+    - h is hue in degrees, a float value between 0.0 and 360.0
+    - alpha is the transparency, between 0.0 (full transparency) and 1.0 (full opacity, default) *)
 
-val of_rgb : int -> int -> int -> t
-(** Creates a [color] from RGB values between 0 and 255. *)
-
-val of_rgba' : float -> float -> float -> float -> t
-(** Creates a [color] from RGB and alpha values between 0.0 and 1.0 *)
-
-val of_rgb' : float -> float -> float -> t
-(** Creates a [color] from RGB values between 0.0 and 1.0 *)
-
-val of_hsla : float -> float -> float -> float -> t
-(** Creates a [color] from Hue, Saturation, Lightness and Alpha values.
-    Hue is in degrees, a float value between 0.0 and 360.0. Saturation, Lightness
-    and Alpha are float values between 0.0 and 1.0 *)
-
-val of_hsl : float -> float -> float -> t
-(** Creates a [color] from Hue, Saturation and Lightness. Hue is in
-    degrees, a float value between 0.0 and 360.0. Saturation and Lightness are float
-    values between 0.0 and 1.0 *)
-
-val of_oklab : ?alpha:float -> float -> float -> float -> t
-(** Creates a [color] from LAB (and optional alpha).
-    l is lightness, between 0.0 and 1.0
-    a and b are floats values (theoretically unbounded but in practice do not exceed ~±0.5)
-    alpha is transparency, between 0.0 and 1.0 *)
-
-val of_oklch : ?alpha:float -> float -> float -> float -> t
-(** Creates a [color] from LCH (and optional alpha).
-    l is lightness, between 0.0 and 1.0
-    c is chroma, minimum is 0.0 and practical maximum value is ~0.5
-    h is hue in degrees, a float value between 0.0 and 360.0
-    alpha is transparency, between 0.0 and 1.0 *)
-
-val of_hexstring : string -> t option
+val of_hexstring : string -> gg option
 (** Parse a hexadecimal color code. Handles short format like [#rgb] or
     long format [#rrggbb]. Short format [#abc] corresponds to long format
     [#aabbcc]. *)
 
-val to_hsla : t -> Hsla.t
-(** Converts a [color] to its Hue, Saturation, Lightness and Alpha values. *)
-
-val to_rgba' : t -> Rgba'.t
-(** Converts a [color] to its rgba value. All values are floats
-    between 0.0 and 1.0 *)
-
-val to_rgba : t -> Rgba.t
-(** Converts a [color] to its rgba value. RGB values are
-    integers in the range of 0 to 255. The alpha channel is a float between
-    0.0 and 1.0 *)
-
-val to_oklab : t -> Oklab.t
-(** Converts a [color] to its Oklab value.
-    l is lightness, between 0.0 and 1.0
-    a and b are floats values (theoretically unbounded but in practice do not exceed ~±0.5)
-    alpha is transparency, between 0.0 and 1.0 *)
-
-val to_oklch : t -> Oklch.t
-(** Converts a [color] to its Oklch value.
-    l is lightness, between 0.0 and 1.0
-    c is chroma, minimum is 0.0 and practical maximum value is ~0.5
-    h is hue in degrees, a float value between 0.0 and 360.0
-    alpha is transparency, between 0.0 and 1.0 *)
-
-val to_hexstring : t -> string
+val to_hexstring : gg -> string
 (** Converts a color to its hexadecimal representation. The alpha channel
     is not represented. *)
 
-val to_css_hsla : t -> string
-(** CSS representation of the color in [hsl(..)] or [hsla(..)] form. *)
-
-val to_css_rgba : t -> string
-(** CSS representation of the color in [rgb(..)] or [rgba(..)] form. *)
-
-val to_css_oklab : t -> string
-(** CSS representation of the color in [oklab(..)] form. *)
-
-val to_css_oklch : t -> string
-(** CSS representation of the color in [oklch(..)] form. *)
-
-val black : t
+val black : gg
 (** Pure black *)
 
-val white : t
+val white : gg
 (** Pure white *)
 
-val gray_tone : float -> t
+val gray_tone : float -> gg
 (** Creates a gray tone from light values (0.0 -> black, 1.0 -> white) *)
 
-val rotate_hue : float -> t -> t
+val rotate_hue : float -> gg -> gg
 (** Rotates the hue of a Color by some angle (in degrees) *)
 
-val complementary : t -> t
+val complementary : gg -> gg
 (** Gets complementary color by rotating hue by 180° *)
 
-val lighten : float -> t -> t
+val lighten : float -> gg -> gg
 (** Lightens a color by adding an amount to the lightness channel *)
 
-val darken : float -> t -> t
-(** Darkens a color by subtracing an amount to the lightness channel *)
+val darken : float -> gg -> gg
+(** Darkens a color by subtracting an amount to the lightness channel *)
 
-val saturate : float -> t -> t
-(** Increases the saturation of a color *)
+val intensify : float -> gg -> gg
+(** Increases the chroma of a color *)
 
-val desaturate : float -> t -> t
-(** Decreases the saturation of a color *)
+val desintensify : float -> gg -> gg
+(** Decreases the chroma of a color *)
 
-val brightness : t -> float
-(** The perceived brightness of a color.
-    {{:https://www.w3.org/TR/AERT/#color-contrast} https://www.w3.org/TR/AERT/#color-contrast} *)
+val lightness : gg -> float
+(** The perceived lightness of any color, with 0. for the darkest black and 1. for the lightest white. *)
 
-val relative_luminance : t -> float
-(** The relative brightness of any color, normalized to
-    0. for darkest black and 1. for lightest white.
-    {{: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef} https://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef} *)
-
-val contrast_ratio : t -> t -> float
+val contrast_ratio : gg -> gg -> float
 (** Contrast ratio between two colors. It is a value that
-    can range from 1. to 21. {{: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef} https://www.w3.org/TR/2008/REC-WCAG20-20081211/#con<Paste>} *)
+    can range from 1. to 21. {: https://www.w3.org/TR/2008/REC-WCAG20-20081211/#contrast-ratiodef} W3 reference} *)
 
-val light : t -> bool
+val is_light : gg -> bool
 (** Checks whether a color is perceived as a light color. *)
 
-val readable : t -> t -> bool
+val readable : gg -> gg -> bool
 (** Checks if text of one color is readable on a background
     of the second color. A minimum contrast ratio of 4.5 is
     recommended to ensure that text is readable on a given
-    background. {{: https://www.w3.org/TR/WCAG20-TECHS/G18.html} https://www.w3.org/TR/WCAG20-TECHS/G18.html} *)
+    background. {{: https://www.w3.org/TR/WCAG20-TECHS/G18.html} W3 reference} *)
 
-val text_color : t -> t
+val text_color : gg -> gg
 (** Returns a readable foreground text color
     (picks between black or white) for a given background color *)
+
+val random : ?alpha:float -> ?light:float -> ?chroma:float -> unit -> gg
+(** Picks a color with a random hue.
+    Uses a default "full-light" chroma and lightness, and full opacity.*)
