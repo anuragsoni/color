@@ -1,6 +1,6 @@
 # Unreleased
 
-# O.3.0
+# 0.3.0
 
 - Update version constraints (OCaml 4.08.0)
 - Added support for OkLab & Oklch color models
