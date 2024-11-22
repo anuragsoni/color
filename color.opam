@@ -12,10 +12,12 @@ license: "MIT"
 homepage: "https://github.com/anuragsoni/color"
 bug-reports: "https://github.com/anuragsoni/color/issues"
 depends: [
-  "ocaml" {>= "4.05.0"}
-  "dune"
-  "gg"
+  "dune" {>= "2.0"}
+  "ocaml" {>= "4.08.0"}
+  "gg" {>= "1.0.0"}
   "alcotest" {with-test}
+  "ocaml-lsp-server" {with-dev-setup}
+  "ocamlformat" {= "0.26.2" & with-dev-setup}
 ]
 build: [
   ["dune" "subst"] {pinned}

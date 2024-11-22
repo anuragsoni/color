@@ -19,7 +19,12 @@
  (license MIT)
  (depends
   (ocaml
-   (>= 4.05.0))
-  dune
-  gg
-  (alcotest :with-test)))
+   (>= 4.08.0))
+  (gg
+   (>= 1.0.0))
+  (alcotest :with-test)
+  (ocaml-lsp-server :with-dev-setup)
+  (ocamlformat
+   (and
+    (= 0.26.2)
+    :with-dev-setup))))

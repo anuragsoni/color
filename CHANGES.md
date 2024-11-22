@@ -1,7 +1,10 @@
 # Unreleased
 
+# O.3.0
+
+- Update version constraints (OCaml 4.08.0)
 - Added support for OkLab & Oklch color models
-- Massive API change:
+- Massive API changes:
   - `Rgba` renamed to `Rgb`
   - `Rgba'` renamed to `Rgb_float`
   - `Hsla` renamed to `Hsl`
