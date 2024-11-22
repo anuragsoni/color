@@ -150,9 +150,9 @@ module Oklab = struct
     let m = (0.2119034982 *. r) +. (0.6806995451 *. g) +. (0.1073969566 *. b) in
     let s = (0.0883024619 *. r) +. (0.2817188376 *. g) +. (0.6299787005 *. b) in
 
-    let l = Float.cbrt l in
-    let m = Float.cbrt m in
-    let s = Float.cbrt s in
+    let l = Float.pow l (1. /. 3.) in
+    let m = Float.pow m (1. /. 3.) in
+    let s = Float.pow s (1. /. 3.) in
 
     {
       l = (0.2104542553 *. l) +. (0.7936177850 *. m) -. (0.0040720468 *. s);
